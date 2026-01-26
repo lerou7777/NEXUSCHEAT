@@ -32,7 +32,7 @@ const plans: Plan[] = [
     price: "R$ 14,99",
     value: 14.99,
     label: "Plano Básico",
-    description: "Libera apenas Roblox e PUBG Mobile.",
+    description: "LIBERA APENAS O CHAT  e PUBG CHEAT Mobile.",
     features: ["Roblox", "PUBG Mobile"],
   },
   {
@@ -102,6 +102,7 @@ export function PaymentModal({
       setLoadingPix(false);
     }
   };
+  
 
   const handleCopyCode = () => {
     if (!pixCopy) return;
@@ -117,6 +118,7 @@ export function PaymentModal({
     setError(null);
     onClose();
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

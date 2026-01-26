@@ -14,7 +14,7 @@ const analysisSteps = [
   { text: 'Validando integridade da conta…', duration: 1000 },
   { text: 'Sincronizando permissões…', duration: 1500 },
   { text: 'Consultando base de dados remota…', duration: 1300 },
-  { text: 'Analisando compatibilidade de módulos…', duration: 1100 },
+  { text: 'verificando restriçoes', duration: 1100 },
   { text: 'Detectando recursos disponíveis…', duration: 1400 },
   { text: 'Validando certificados de segurança…', duration: 900 },
   { text: 'Preparando desbloqueio…', duration: 1000 },

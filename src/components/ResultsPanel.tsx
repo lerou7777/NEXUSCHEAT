@@ -12,11 +12,11 @@ export function ResultsPanel({ isOpen, gameName, accountId, onUnlock, onClose }:
   if (!isOpen) return null;
 
   const results = [
-    { icon: Server, label: 'Integridade', value: 'Estável', color: 'text-secondary' },
-    { icon: Shield, label: 'Compatibilidade', value: 'Confirmada', color: 'text-secondary' },
-    { icon: Globe, label: 'Região', value: 'Global', color: 'text-primary' },
-    { icon: Cpu, label: 'Módulos', value: 'Disponíveis', color: 'text-primary' },
-  ];
+  { icon: Server, label: 'Integridade', value: 'chat/restrict 04/01/2026', color: 'text-red-500' },
+  { icon: Shield, label: 'Compatibilidade', value: 'Confirmada', color: 'text-secondary' },
+  { icon: Globe, label: 'Região', value: 'brasil 55+', color: 'text-primary' },
+  { icon: Cpu, label: 'Módulos', value: 'Disponíveis', color: 'text-primary' },
+];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -34,7 +34,7 @@ export function ResultsPanel({ isOpen, gameName, accountId, onUnlock, onClose }:
             <CheckCircle className="h-8 w-8 text-secondary" />
           </div>
           <h2 className="text-xl font-bold text-foreground">
-            Análise concluída com sucesso
+            cheat/injection concluida
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
             {gameName} • <span className="font-mono text-primary">{accountId}</span>

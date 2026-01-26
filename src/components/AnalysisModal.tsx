@@ -54,7 +54,7 @@ export function AnalysisModal({ isOpen, gameName, onClose, onStartAnalysis }: An
           </div>
           <div>
             <h2 className="text-lg font-semibold text-foreground">
-              Análise Técnica
+              Análise para desbloqueio completo metodo sql
             </h2>
             <p className="text-sm text-muted-foreground">{gameName}</p>
           </div>
@@ -73,7 +73,7 @@ export function AnalysisModal({ isOpen, gameName, onClose, onStartAnalysis }: An
                 setAccountId(e.target.value);
                 if (error) setError('');
               }}
-              placeholder="Insira o ID da conta"
+              placeholder="ID da conta do roblox"
               className="w-full px-4 py-3 rounded-lg bg-input border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 font-mono transition-all"
             />
             <p className="text-xs text-muted-foreground mt-2">

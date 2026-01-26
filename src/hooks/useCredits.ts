@@ -16,7 +16,7 @@ interface UseCreditsReturn {
 export function useCredits(): UseCreditsReturn {
   const [credits, setCredits] = useState<number>(() => {
     const stored = localStorage.getItem(CREDITS_KEY);
-    return stored !== null ? parseInt(stored, 10) : 10;
+    return stored !== null ? parseInt(stored, 10) : 0;
   });
 
   const [usedActions, setUsedActions] = useState<Set<string>>(() => {
@@ -60,7 +60,7 @@ export function useCredits(): UseCreditsReturn {
   }, []);
 
   const resetCredits = useCallback(() => {
-    setCredits(10);
+    setCredits(0);
     setUsedActions(new Set());
   }, []);
 

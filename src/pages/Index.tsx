@@ -81,8 +81,8 @@ export default function Index() {
       {/* ===== HERO ===== */}
       <section className="py-16 text-center">
         <h1 className="text-4xl font-bold mb-4">
-          <span className="text-gradient-cyber">Painel Avançado</span><br />
-          Análise Técnica de Contas
+          <span className="text-gradient-cyber">NEXUSCHEAT PAINEL</span><br />
+          Análise Técnica de Contas GAMER
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
           Sistema automatizado que identifica compatibilidade e prepara módulos avançados em segundos.

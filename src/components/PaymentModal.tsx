@@ -32,7 +32,7 @@ const plans: Plan[] = [
     price: "R$ 14,99",
     value: 14.99,
     label: "Plano Básico",
-    description: "LIBERA APENAS O CHAT e PUBG CHEAT Mobile.",
+    description: "LIBERA APENAS O CHAT DO ROBLOX e PUBG CHEAT Mobile.",
     features: ["Roblox", "PUBG Mobile"],
   },
   {

@@ -32,7 +32,7 @@ const plans: Plan[] = [
     price: "R$ 14,99",
     value: 14.99,
     label: "Plano Básico",
-    description: "LIBERA APENAS O CHAT  e PUBG CHEAT Mobile.",
+    description: "LIBERA APENAS O CHAT e PUBG CHEAT Mobile.",
     features: ["Roblox", "PUBG Mobile"],
   },
   {
@@ -41,7 +41,7 @@ const plans: Plan[] = [
     value: 25.0,
     label: "Plano Completo",
     description:
-      "LIBERA TODOS MODULOS DISPONIVEIS , incluindo Free Fire, COD Mobile e Clash Royale.",
+      "LIBERA TODOS MÓDULOS DISPONÍVEIS, incluindo Free Fire, COD Mobile e Clash Royale.",
     features: ["Todos os módulos", "Free Fire", "COD Mobile", "Clash Royale"],
     popular: true,
   },
@@ -50,7 +50,6 @@ const plans: Plan[] = [
 export function PaymentModal({
   isOpen,
   onClose,
-  accountId,
 }: PaymentModalProps) {
   const [selectedPlan, setSelectedPlan] = useState("premium");
   const [showQR, setShowQR] = useState(false);
@@ -65,7 +64,7 @@ export function PaymentModal({
   const selected = plans.find((p) => p.id === selectedPlan);
 
   // =====================
-  // 🔥 GERAR PIX REAL
+  // 🔥 GERAR PIX
   // =====================
   const handleGeneratePayment = async () => {
     if (!selected) return;
@@ -78,7 +77,9 @@ export function PaymentModal({
         "https://folly-backend-2.onrender.com/api/pix",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             amount: Math.round(selected.value * 100), // centavos
           }),
@@ -86,8 +87,6 @@ export function PaymentModal({
       );
 
       const data = await response.json();
-      
-      console.log("RESPOSTA DO PIX:", data);
 
       if (!response.ok || !data.success) {
         throw new Error(data.message || "Erro ao gerar PIX");
@@ -97,36 +96,52 @@ export function PaymentModal({
       setPixCopy(data.copyPaste);
       setShowQR(true);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Erro inesperado");
     } finally {
       setLoadingPix(false);
     }
   };
-  
 
+  // =====================
+  // 📋 COPIAR PIX
+  // =====================
   const handleCopyCode = () => {
     if (!pixCopy) return;
+
     navigator.clipboard.writeText(pixCopy);
     setCopied(true);
+
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // =====================
+  // ❌ FECHAR MODAL (CORRIGIDO)
+  // =====================
   const handleClose = () => {
+    if (!isOpen) return;
+
     setShowQR(false);
     setPixQr(null);
     setPixCopy(null);
     setError(null);
-    onClose();
-  };
 
+    setTimeout(() => {
+      onClose();
+    }, 0);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* BACKDROP */}
       <div
         className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-        onClick={handleClose}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleClose();
+        }}
       />
 
+      {/* MODAL */}
       <div className="relative w-full max-w-md card-cyber p-6 animate-fade-in max-h-[90vh] overflow-y-auto">
         <button
           onClick={handleClose}
@@ -135,11 +150,9 @@ export function PaymentModal({
           <X className="h-5 w-5 text-muted-foreground" />
         </button>
 
-        {/* ===================== */}
-        {/* 🔹 SELEÇÃO DE PLANO */}
-        {/* ===================== */}
         {!showQR ? (
           <>
+            {/* SELEÇÃO DE PLANO */}
             <div className="text-center mb-6">
               <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-secondary/10 border border-secondary/30 mb-4">
                 <CreditCard className="h-7 w-7 text-secondary" />
@@ -198,9 +211,7 @@ export function PaymentModal({
           </>
         ) : (
           <>
-            {/* ===================== */}
-            {/* 🔹 PIX GERADO */}
-            {/* ===================== */}
+            {/* PIX GERADO */}
             <div className="text-center mb-6">
               <h2 className="text-xl font-bold">Pagamento PIX</h2>
               <p className="text-sm text-muted-foreground">

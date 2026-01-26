@@ -75,7 +75,7 @@ export function PaymentModal({
       setError(null);
 
       const response = await fetch(
-        "https://folly-backend-2.onrender.com/api/pix",
+        "https://folly-backend-2.onrender.com/api/pix/create",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

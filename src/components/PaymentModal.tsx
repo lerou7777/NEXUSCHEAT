@@ -86,6 +86,8 @@ export function PaymentModal({
       );
 
       const data = await response.json();
+      
+      console.log("RESPOSTA DO PIX:", data);
 
       if (!response.ok || !data.success) {
         throw new Error(data.message || "Erro ao gerar PIX");

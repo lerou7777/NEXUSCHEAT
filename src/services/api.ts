@@ -8,6 +8,6 @@ export const api = axios.create({
 });
 
 export const createPix = async (payload: any) => {
-  const response = await api.post("/api/pix/create", payload);
+  const response = await api.post("/api/pix", payload);
   return response.data;
 };

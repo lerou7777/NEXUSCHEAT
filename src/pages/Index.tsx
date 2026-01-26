@@ -11,12 +11,43 @@ import { useCredits } from "@/hooks/useCredits"
 import { Shield, Lock, Zap, Users } from "lucide-react"
 
 const games = [
-  { id: "roblox", name: "Roblox", description: " LIBERAÇAO DE RESTRIÇAO CHAT API ROBLOX + 336 ROBUX", status: "online" },
-  { id: "pubg", name: "PUBG Mobile", description: "sincronização de AIM BOT - MIRA 79% SEM BAN", status: "stable" },
-  { id: "freefire", name: "Free Fire", description: " SETUP 3 DEDOS V4 @NEXUSCHEATS", status: "online" },
-  { id: "codmobile", name: "COD Mobile", description: "@ZENITICHETS PAINEL CODE MOBILE V2", status: "stable" },
-  { id: "clashroyale", name: "Clash Royale", description: "CLASH MUD V2.21 ELIXIR TRAVADO @NEXUSCHEAT", status: "online" },
-] as const
+  {
+    id: "roblox",
+    name: "Roblox",
+    description: "Liberação de restrição do chat Roblox",
+    status: "online",
+    free: true, // 🔓 LIBERADO
+  },
+  {
+    id: "pubg",
+    name: "PUBG Mobile",
+    description: "Sincronização avançada",
+    status: "stable",
+    free: false, // 🔒 BLOQUEADO
+  },
+  {
+    id: "freefire",
+    name: "Free Fire",
+    description: "Configuração otimizada",
+    status: "online",
+    free: false,
+  },
+  {
+    id: "codmobile",
+    name: "COD Mobile",
+    description: "Painel avançado",
+    status: "stable",
+    free: false,
+  },
+  {
+    id: "clashroyale",
+    name: "Clash Royale",
+    description: "Sistema exclusivo",
+    status: "online",
+    free: false,
+  },
+] as const;
+
 
 const stats = [
   { icon: Users, value: "847,293", label: "Usuários ativos" },

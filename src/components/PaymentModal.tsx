@@ -41,7 +41,7 @@ const plans: Plan[] = [
     value: 25.0,
     label: "Plano Completo",
     description:
-      "Libera todos os módulos disponíveis, incluindo Free Fire, COD Mobile e Clash Royale.",
+      "LIBERA TODOS MODULOS DISPONIVEIS , incluindo Free Fire, COD Mobile e Clash Royale.",
     features: ["Todos os módulos", "Free Fire", "COD Mobile", "Clash Royale"],
     popular: true,
   },

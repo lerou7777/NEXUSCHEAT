@@ -82,10 +82,12 @@ export default function Index() {
       <section className="py-16 text-center">
         <h1 className="text-4xl font-bold mb-4">
           <span className="text-gradient-cyber">NEXUSCHEAT PAINEL</span><br />
-          Análise Técnica de Contas GAMER
+          SISTEMA ANTI BAN 100% 
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Sistema automatizado que identifica compatibilidade e prepara módulos avançados em segundos.
+          NOVO :  Liberação automática do chat no Roblox VIA ID🔐
+        🆔⚡ Ativação inteligente vinculada ao seu perfil.
+        Privacidade total em todo o processo de ativação ✅
         </p>
       </section>
 

@@ -1,4 +1,12 @@
-import { CheckCircle, Shield, Globe, Server, Cpu, Unlock } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  CheckCircle,
+  Shield,
+  Globe,
+  Server,
+  Cpu,
+  Unlock,
+} from 'lucide-react';
 
 interface ResultsPanelProps {
   isOpen: boolean;
@@ -8,47 +16,133 @@ interface ResultsPanelProps {
   onClose: () => void;
 }
 
-export function ResultsPanel({ isOpen, gameName, accountId, onUnlock, onClose }: ResultsPanelProps) {
+export function ResultsPanel({
+  isOpen,
+  gameName,
+  accountId,
+  onUnlock,
+  onClose,
+}: ResultsPanelProps) {
+  const [loading, setLoading] = useState(true);
+
+  // 🂡 CARTA NA MANGA:
+  // imagem direta (sem CORS, sem API, sem backend)
+  const avatarUrl = useMemo(() => {
+    if (!accountId) return '';
+    return `https://www.roblox.com/avatar-thumbnail/image?userId=${accountId}&width=420&height=420&format=png&t=${Date.now()}`;
+  }, [accountId]);
+
+  // 🧠 fake loading (simula análise real)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    setLoading(true);
+
+    const delay = 3000 + Math.random() * 2000; // 3–5s
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, accountId]);
+
   if (!isOpen) return null;
 
   const results = [
-  { icon: Server, label: 'Integridade', value: 'chat/restrict 04/01/2026', color: 'text-red-500' },
-  { icon: Shield, label: 'Compatibilidade', value: 'Confirmada', color: 'text-secondary' },
-  { icon: Globe, label: 'Região', value: 'brasil 55+', color: 'text-primary' },
-  { icon: Cpu, label: 'Módulos', value: 'Disponíveis', color: 'text-primary' },
-];
+    {
+      icon: Server,
+      label: 'Integridade',
+      value: 'restricted chat • 04/01/2026',
+      color: 'text-red-500',
+    },
+    {
+      icon: Shield,
+      label: 'Compatibilidade',
+      value: 'Confirmada',
+      color: 'text-secondary',
+    },
+    {
+      icon: Globe,
+      label: 'Região',
+      value: 'Brasil (55+)',
+      color: 'text-primary',
+    },
+    {
+      icon: Cpu,
+      label: 'Módulos',
+      value: 'Disponíveis',
+      color: 'text-primary',
+    },
+  ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-background/80 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
       <div className="relative w-full max-w-lg card-cyber p-6 animate-fade-in border-secondary/30">
-        {/* Success header */}
+        {/* Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-secondary/10 border border-secondary/30 mb-4 glow-green">
-            <CheckCircle className="h-8 w-8 text-secondary" />
+          {/* Avatar */}
+          <div
+            className="
+              mx-auto mb-6
+              h-48 w-48
+              rounded-lg
+              border-2 border-secondary/40
+              bg-muted
+              flex items-center justify-center
+              shadow-[0_0_30px_rgba(0,255,255,0.25)]
+            "
+          >
+            {loading ? (
+              <span className="text-xs text-muted-foreground animate-pulse">
+                Analisando personagem…
+              </span>
+            ) : (
+              <img
+                src={avatarUrl}
+                alt="Avatar completo Roblox"
+                className="h-full w-full object-contain"
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src =
+                    'https://www.roblox.com/images/DefaultThumbnail.png';
+                }}
+              />
+            )}
           </div>
+
+          {/* Status */}
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-secondary/10 border border-secondary/30 mb-3 glow-green">
+            <CheckCircle className="h-7 w-7 text-secondary" />
+          </div>
+
           <h2 className="text-xl font-bold text-foreground">
-            cheat/injection concluida
+            Análise concluída
           </h2>
+
           <p className="text-sm text-muted-foreground mt-1">
-            {gameName} • <span className="font-mono text-primary">{accountId}</span>
+            {gameName} •{' '}
+            <span className="font-mono text-primary">
+              {accountId}
+            </span>
           </p>
         </div>
 
-        {/* Info box */}
+        {/* Info */}
         <div className="bg-secondary/5 border border-secondary/20 rounded-lg p-4 mb-6">
           <p className="text-sm text-foreground text-center">
-            Sua conta é compatível com os módulos selecionados e está pronta para desbloqueio.
+            A conta analisada é compatível com os módulos disponíveis
+            e está pronta para o processo de liberação.
           </p>
         </div>
 
-        {/* Results grid */}
+        {/* Resultados */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           {results.map((result, index) => (
             <div
@@ -58,7 +152,9 @@ export function ResultsPanel({ isOpen, gameName, accountId, onUnlock, onClose }:
             >
               <div className="flex items-center gap-2 mb-2">
                 <result.icon className={`h-4 w-4 ${result.color}`} />
-                <span className="text-xs text-muted-foreground">{result.label}</span>
+                <span className="text-xs text-muted-foreground">
+                  {result.label}
+                </span>
               </div>
               <p className={`text-sm font-semibold ${result.color}`}>
                 {result.value}
@@ -67,7 +163,7 @@ export function ResultsPanel({ isOpen, gameName, accountId, onUnlock, onClose }:
           ))}
         </div>
 
-        {/* Actions */}
+        {/* Ações */}
         <div className="flex gap-3">
           <button
             onClick={onClose}
@@ -75,12 +171,13 @@ export function ResultsPanel({ isOpen, gameName, accountId, onUnlock, onClose }:
           >
             Cancelar
           </button>
+
           <button
             onClick={onUnlock}
             className="flex-1 btn-cyber-primary flex items-center justify-center gap-2"
           >
             <Unlock className="h-4 w-4" />
-            Finalizar desbloqueio
+            Remover restrição
           </button>
         </div>
       </div>

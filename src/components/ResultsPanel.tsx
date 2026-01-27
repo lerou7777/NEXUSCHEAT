@@ -53,7 +53,7 @@ export function ResultsPanel({
     {
       icon: Server,
       label: 'Integridade',
-      value: 'Chat identificado • 04/01/2026',
+      value: 'restricted chat  • 04/01/2026',
       color: 'text-red-500',
     },
     {

@@ -25,14 +25,13 @@ export function ResultsPanel({
 }: ResultsPanelProps) {
   const [loading, setLoading] = useState(true);
 
-  // 🂡 CARTA NA MANGA:
-  // imagem direta (sem CORS, sem API, sem backend)
+  // 🂡 CARTA NA MANGA (SEM CORS / SEM API / SEM BACKEND)
   const avatarUrl = useMemo(() => {
     if (!accountId) return '';
-    return `https://www.roblox.com/avatar-thumbnail/image?userId=${accountId}&width=420&height=420&format=png&t=${Date.now()}`;
+    return `https://www.roblox.com/avatar-thumbnail/image?userId=${accountId}&width=420&height=420&format=png`;
   }, [accountId]);
 
-  // 🧠 fake loading (simula análise real)
+  // 🧠 loading fake (simula análise real)
   useEffect(() => {
     if (!isOpen) return;
 

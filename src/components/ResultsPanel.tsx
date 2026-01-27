@@ -24,18 +24,20 @@ export function ResultsPanel({
   onClose,
 }: ResultsPanelProps) {
   const [loading, setLoading] = useState(true);
+  const [imgError, setImgError] = useState(false);
 
-  // 🂡 CARTA NA MANGA (SEM CORS / SEM API / SEM BACKEND)
+  // ✅ Avatar via BACKEND (sem CORS, sem Roblox direto)
   const avatarUrl = useMemo(() => {
     if (!accountId) return '';
-    return `https://www.roblox.com/avatar-thumbnail/image?userId=${accountId}&width=420&height=420&format=png`;
+    return `https://folly-backend-2.onrender.com/avatar/${accountId}?t=${Date.now()}`;
   }, [accountId]);
 
-  // 🧠 loading fake (simula análise real)
+  // 🧠 loading fake (UX + sensação de análise real)
   useEffect(() => {
     if (!isOpen) return;
 
     setLoading(true);
+    setImgError(false);
 
     const delay = 3000 + Math.random() * 2000; // 3–5s
     const timer = setTimeout(() => {
@@ -51,7 +53,7 @@ export function ResultsPanel({
     {
       icon: Server,
       label: 'Integridade',
-      value: 'restricted chat • 04/01/2026',
+      value: 'Chat identificado • 04/01/2026',
       color: 'text-red-500',
     },
     {
@@ -96,23 +98,30 @@ export function ResultsPanel({
               bg-muted
               flex items-center justify-center
               shadow-[0_0_30px_rgba(0,255,255,0.25)]
+              overflow-hidden
             "
           >
-            {loading ? (
+            {loading && (
               <span className="text-xs text-muted-foreground animate-pulse">
                 Analisando personagem…
               </span>
-            ) : (
+            )}
+
+            {!loading && !imgError && (
               <img
                 src={avatarUrl}
                 alt="Avatar completo Roblox"
                 className="h-full w-full object-contain"
                 loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.src =
-                    'https://www.roblox.com/images/DefaultThumbnail.png';
-                }}
+                referrerPolicy="no-referrer"
+                onError={() => setImgError(true)}
               />
+            )}
+
+            {!loading && imgError && (
+              <span className="text-xs text-muted-foreground text-center px-4">
+                Personagem indisponível no momento
+              </span>
             )}
           </div>
 
@@ -137,7 +146,7 @@ export function ResultsPanel({
         <div className="bg-secondary/5 border border-secondary/20 rounded-lg p-4 mb-6">
           <p className="text-sm text-foreground text-center">
             A conta analisada é compatível com os módulos disponíveis
-            e está pronta para o processo de liberação.
+            e está pronta para remover retriçoes
           </p>
         </div>
 

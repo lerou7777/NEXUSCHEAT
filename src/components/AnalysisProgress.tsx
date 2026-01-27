@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Terminal, CheckCircle, Loader2 } from 'lucide-react';
 
 interface AnalysisProgressProps {
@@ -11,10 +11,18 @@ interface AnalysisProgressProps {
 const analysisSteps = [
   { text: 'Inicializando ambiente seguro…', duration: 800 },
   { text: 'Conectando aos módulos disponíveis…', duration: 1200 },
-  { text: 'Validando integridade da conta…', duration: 1000 },
+  {
+    text: 'Validando integridade da conta…',
+    duration: 1200,
+    alert: true, // 🔴
+  },
   { text: 'Sincronizando permissões…', duration: 1500 },
   { text: 'Consultando base de dados remota…', duration: 1300 },
-  { text: 'Verificando restrições de acesso…', duration: 1100 },
+  {
+    text: 'Verificando restrições de acesso…',
+    duration: 1400,
+    alert: true, // 🔴
+  },
   { text: 'Detectando recursos disponíveis…', duration: 1400 },
   { text: 'Validando certificados de segurança…', duration: 900 },
   { text: 'Preparando desbloqueio…', duration: 1000 },
@@ -40,7 +48,8 @@ export function AnalysisProgress({
     }
 
     let stepIndex = 0;
-    let totalDuration = 0;
+    let elapsedTime = 0;
+
     const totalTime = analysisSteps.reduce(
       (acc, step) => acc + step.duration,
       0
@@ -48,20 +57,35 @@ export function AnalysisProgress({
 
     const runStep = () => {
       if (stepIndex >= analysisSteps.length) {
-        setTimeout(onComplete, 500);
+        // 🎬 trava cinematográfica em 92%
+        setProgress(92);
+        setTimeout(() => {
+          setProgress(100);
+          setTimeout(onComplete, 400);
+        }, 1000);
         return;
       }
 
-      setCurrentStep(stepIndex);
       const step = analysisSteps[stepIndex];
-      totalDuration += step.duration;
+      setCurrentStep(stepIndex);
+
+      const extraDelay = step.alert ? 300 : 0; // 🐢 tensão sutil
+      elapsedTime += step.duration;
 
       setTimeout(() => {
         setCompletedSteps(prev => [...prev, stepIndex]);
-        setProgress(Math.round((totalDuration / totalTime) * 100));
+
+        const calculatedProgress = Math.round(
+          (elapsedTime / totalTime) * 100
+        );
+
+        setProgress(prev =>
+          calculatedProgress > prev ? calculatedProgress : prev
+        );
+
         stepIndex++;
         runStep();
-      }, step.duration);
+      }, step.duration + extraDelay);
     };
 
     runStep();
@@ -71,10 +95,8 @@ export function AnalysisProgress({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-background/90 backdrop-blur-sm" />
 
-      {/* Modal */}
       <div className="relative w-full max-w-lg card-cyber p-6 animate-fade-in">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
@@ -91,7 +113,7 @@ export function AnalysisProgress({
           </div>
         </div>
 
-        {/* Progress bar */}
+        {/* Progress */}
         <div className="mb-6">
           <div className="flex justify-between text-xs text-muted-foreground mb-2">
             <span>Progresso</span>
@@ -105,7 +127,7 @@ export function AnalysisProgress({
           </div>
         </div>
 
-        {/* Terminal logs */}
+        {/* Logs */}
         <div className="bg-background/50 rounded-lg border border-border p-4 h-64 overflow-y-auto scrollbar-cyber">
           <div className="space-y-2">
             {analysisSteps.map((step, index) => {
@@ -120,16 +142,18 @@ export function AnalysisProgress({
                   }`}
                 >
                   {isCompleted ? (
-                    <CheckCircle className="h-4 w-4 text-foreground flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-4 w-4 text-foreground mt-0.5" />
                   ) : isCurrent ? (
-                    <Loader2 className="h-4 w-4 text-foreground flex-shrink-0 mt-0.5 animate-spin" />
+                    <Loader2 className="h-4 w-4 text-foreground mt-0.5 animate-spin" />
                   ) : (
-                    <span className="w-4 h-4 flex-shrink-0" />
+                    <span className="w-4 h-4" />
                   )}
 
                   <span
                     className={
-                      isCompleted || isCurrent
+                      step.alert && (isCompleted || isCurrent)
+                        ? 'text-red-500'
+                        : isCompleted || isCurrent
                         ? 'text-foreground'
                         : 'text-muted-foreground'
                     }

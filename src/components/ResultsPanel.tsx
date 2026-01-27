@@ -53,26 +53,26 @@ export function ResultsPanel({
     {
       icon: Server,
       label: 'Integridade',
-      value: 'restricted chat  • 04/01/2026',
-      color: 'text-red-500',
+      value: 'Restrições de chat detectadas • 04/01/2026',
+      color: 'text-red-500', // 🔴 alerta controlado
     },
     {
       icon: Shield,
       label: 'Compatibilidade',
       value: 'Confirmada',
-      color: 'text-secondary',
+      color: 'text-foreground',
     },
     {
       icon: Globe,
       label: 'Região',
       value: 'Brasil (55+)',
-      color: 'text-primary',
+      color: 'text-foreground',
     },
     {
       icon: Cpu,
       label: 'Módulos',
       value: 'Disponíveis',
-      color: 'text-primary',
+      color: 'text-foreground',
     },
   ];
 
@@ -85,7 +85,7 @@ export function ResultsPanel({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-lg card-cyber p-6 animate-fade-in border-secondary/30">
+      <div className="relative w-full max-w-lg card-cyber p-6 animate-fade-in border-border">
         {/* Header */}
         <div className="text-center mb-6">
           {/* Avatar */}
@@ -94,10 +94,10 @@ export function ResultsPanel({
               mx-auto mb-6
               h-48 w-48
               rounded-lg
-              border-2 border-secondary/40
+              border-2 border-border
               bg-muted
               flex items-center justify-center
-              shadow-[0_0_30px_rgba(0,255,255,0.25)]
+              shadow-sm
               overflow-hidden
             "
           >
@@ -110,7 +110,7 @@ export function ResultsPanel({
             {!loading && !imgError && (
               <img
                 src={avatarUrl}
-                alt="Avatar completo Roblox"
+                alt="Avatar do jogador"
                 className="h-full w-full object-contain"
                 loading="lazy"
                 referrerPolicy="no-referrer"
@@ -126,8 +126,8 @@ export function ResultsPanel({
           </div>
 
           {/* Status */}
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-secondary/10 border border-secondary/30 mb-3 glow-green">
-            <CheckCircle className="h-7 w-7 text-secondary" />
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-muted border border-border mb-3">
+            <CheckCircle className="h-7 w-7 text-foreground" />
           </div>
 
           <h2 className="text-xl font-bold text-foreground">
@@ -136,17 +136,17 @@ export function ResultsPanel({
 
           <p className="text-sm text-muted-foreground mt-1">
             {gameName} •{' '}
-            <span className="font-mono text-primary">
+            <span className="font-mono text-foreground">
               {accountId}
             </span>
           </p>
         </div>
 
         {/* Info */}
-        <div className="bg-secondary/5 border border-secondary/20 rounded-lg p-4 mb-6">
+        <div className="bg-muted/40 border border-border rounded-lg p-4 mb-6">
           <p className="text-sm text-foreground text-center">
             A conta analisada é compatível com os módulos disponíveis
-            e está pronta para remover retriçoes
+            e está pronta para a remoção de restrições.
           </p>
         </div>
 
@@ -155,7 +155,7 @@ export function ResultsPanel({
           {results.map((result, index) => (
             <div
               key={index}
-              className="bg-muted/30 border border-border/50 rounded-lg p-4 animate-fade-in"
+              className="bg-muted/30 border border-border rounded-lg p-4 animate-fade-in"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="flex items-center gap-2 mb-2">

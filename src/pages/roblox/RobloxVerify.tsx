@@ -34,6 +34,8 @@ const finalExecutionLogs = [
 ];
 
 export default function RobloxVerify() {
+  const navigate = useNavigate();
+
   const [step, setStep] = useState<VerifyStep>('input');
   const [userId, setUserId] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -49,10 +51,8 @@ export default function RobloxVerify() {
   const [showInsufficientBalance, setShowInsufficientBalance] =
     useState(false);
 
-  const navigate = useNavigate();
-
   // ===============================
-  // 🔍 VERIFY USER (BACKEND)
+  // 🔍 VERIFY USER (AVATAR OPCIONAL)
   // ===============================
   const handleVerify = async () => {
     if (!userId) return;
@@ -64,23 +64,22 @@ export default function RobloxVerify() {
         `${import.meta.env.VITE_API_URL}/avatar/${userId}`
       );
 
+      if (!res.ok) throw new Error('Avatar fetch failed');
+
       const data = await res.json();
 
-      // Backend retorna avatarUrl (string)
-      if (res.ok && data?.avatarUrl) {
+      if (data?.avatarUrl) {
         setAvatarUrl(data.avatarUrl);
-        setStep('avatar');
+        setStep('avatar'); // mostra avatar
         return;
       }
-
-      // ⚠️ Sem avatar → segue fluxo
-      setAvatarUrl(null);
-      setStep('loading2');
     } catch (error) {
-      console.warn('Avatar fetch failed, continuing flow:', error);
+      console.warn('Avatar opcional, seguindo fluxo:', error);
       setAvatarUrl(null);
-      setStep('loading2');
     }
+
+    // 🚀 SEMPRE CONTINUA
+    setStep('loading2');
   };
 
   // ===============================
@@ -239,7 +238,7 @@ export default function RobloxVerify() {
   }
 
   // ===============================
-  // ⏳ FINAL EXECUTION
+  // ⏳ FINAL EXECUTION → PAGAMENTO
   // ===============================
   if (step === 'loading3') {
     return (

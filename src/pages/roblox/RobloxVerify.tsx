@@ -36,7 +36,7 @@ const finalExecutionLogs = [
 export default function RobloxVerify() {
   const [step, setStep] = useState<VerifyStep>('input');
   const [userId, setUserId] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarBase64, setAvatarBase64] = useState<string | null>(null);
 
   const [checkItems, setCheckItems] = useState<CheckItem[]>([
     { id: 'integrity', label: 'Account Integrity', checked: true },
@@ -46,7 +46,8 @@ export default function RobloxVerify() {
   ]);
 
   const [showCreditModal, setShowCreditModal] = useState(false);
-  const [showInsufficientBalance, setShowInsufficientBalance] = useState(false);
+  const [showInsufficientBalance, setShowInsufficientBalance] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -69,17 +70,16 @@ export default function RobloxVerify() {
 
       const data = await res.json();
 
-      // 🔥 CORREÇÃO PRINCIPAL
       if (!data.imageBase64) {
         throw new Error('Invalid avatar response');
       }
 
-      setAvatarUrl(data.imageBase64);
+      setAvatarBase64(data.imageBase64);
       setStep('avatar');
     } catch (err) {
       console.error('Avatar fetch failed:', err);
       setUserId('');
-      setAvatarUrl(null);
+      setAvatarBase64(null);
       setStep('input');
       alert('Failed to load avatar. Check User ID.');
     }
@@ -93,7 +93,7 @@ export default function RobloxVerify() {
       setStep('loading2');
     } else {
       setUserId('');
-      setAvatarUrl(null);
+      setAvatarBase64(null);
       setStep('input');
     }
   };
@@ -106,36 +106,8 @@ export default function RobloxVerify() {
     );
   };
 
-  const handleContinueSummary = () => {
-    setStep('loading3');
-  };
-
-  const handleFinalLoadingComplete = () => {
-    setShowCreditModal(true);
-  };
-
-  const handleUseCredits = () => {
-    setShowInsufficientBalance(true);
-  };
-
-  const handleAddCredits = () => {
-    setShowCreditModal(false);
-
-    navigate('/modules/roblox/checkout', {
-      state: {
-        userId,
-        avatarUrl,
-      },
-    });
-  };
-
-  const handleCancelModal = () => {
-    setShowCreditModal(false);
-    setShowInsufficientBalance(false);
-  };
-
   // ===============================
-  // 🧾 INPUT STEP
+  // 🧾 INPUT
   // ===============================
   if (step === 'input') {
     return (
@@ -185,15 +157,15 @@ export default function RobloxVerify() {
     );
   }
 
- // ===============================
-  // 🧍 AVATAR CONFIRMATION
   // ===============================
-  if (step === 'avatar' && avatarUrl) {
+  // 🧍 AVATAR
+  // ===============================
+  if (step === 'avatar' && avatarBase64) {
     return (
       <div className="py-12 text-center">
-        <div className="avatar-frame w-48 h-48 mx-auto mb-6 bg-secondary">
+        <div className="avatar-frame w-48 h-48 mx-auto mb-6 bg-secondary overflow-hidden">
           <img
-            src={avatarUrl}
+            src={avatarBase64}
             alt="Roblox Avatar"
             className="w-full h-full object-cover"
           />
@@ -225,7 +197,10 @@ export default function RobloxVerify() {
   if (step === 'loading2') {
     return (
       <div className="py-12">
-        <LoadingPhase phase={2} onComplete={() => setStep('summary')} />
+        <LoadingPhase
+          phase={2}
+          onComplete={() => setStep('summary')}
+        />
       </div>
     );
   }
@@ -253,7 +228,7 @@ export default function RobloxVerify() {
           ))}
 
           <button
-            onClick={handleContinueSummary}
+            onClick={() => setStep('loading3')}
             className="btn-cyber-solid w-full mt-6"
           >
             Continue
@@ -271,10 +246,10 @@ export default function RobloxVerify() {
       <>
         <TerminalLog
           logs={finalExecutionLogs}
-          onComplete={handleFinalLoadingComplete}
+          onComplete={() => setShowCreditModal(true)}
         />
 
-        <Dialog open={showCreditModal} onOpenChange={handleCancelModal}>
+        <Dialog open={showCreditModal}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Credits Required</DialogTitle>
@@ -286,16 +261,29 @@ export default function RobloxVerify() {
             <DialogFooter>
               {!showInsufficientBalance ? (
                 <>
-                  <button onClick={handleCancelModal} className="btn-cyber">
+                  <button
+                    onClick={() => setShowCreditModal(false)}
+                    className="btn-cyber"
+                  >
                     Cancel
                   </button>
-                  <button onClick={handleUseCredits} className="btn-cyber-solid">
+                  <button
+                    onClick={() => setShowInsufficientBalance(true)}
+                    className="btn-cyber-solid"
+                  >
                     Use Credits
                   </button>
                 </>
               ) : (
                 <button
-                  onClick={handleAddCredits}
+                  onClick={() =>
+                    navigate('/modules/roblox/checkout', {
+                      state: {
+                        userId,
+                        avatarBase64,
+                      },
+                    })
+                  }
                   className="btn-cyber-solid w-full"
                 >
                   Add Credits

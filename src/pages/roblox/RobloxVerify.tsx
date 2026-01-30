@@ -59,12 +59,24 @@ export default function RobloxVerify() {
 
     setStep('loading1');
 
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/avatar/${userId}`
-      );
+    const API_URL = import.meta.env.VITE_API_URL;
 
-      if (!res.ok) throw new Error('Avatar fetch failed');
+    if (!API_URL) {
+      console.error('❌ VITE_API_URL não definida');
+      setAvatarUrl(null);
+      setStep('loading2');
+      return;
+    }
+
+    const requestUrl = `${API_URL}/avatar/${userId}`;
+    console.log('🔍 Avatar request:', requestUrl);
+
+    try {
+      const res = await fetch(requestUrl);
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
 
       const data = await res.json();
 
@@ -74,7 +86,7 @@ export default function RobloxVerify() {
         return;
       }
     } catch (error) {
-      console.warn('Avatar opcional, seguindo fluxo:', error);
+      console.warn('⚠️ Avatar opcional, seguindo fluxo:', error);
       setAvatarUrl(null);
     }
 

@@ -67,17 +67,20 @@ export default function RobloxCheckout() {
         return;
       }
 
-      const response = await fetch("http://localhost:3000/api/pix/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId: selectedPackage.id,
-          customer: {
-            name: userName,
-            email: `${userName}@nexus.fake`,
-          },
-        }),
-      });
+const response = await fetch(
+  `${import.meta.env.VITE_API_URL}/api/pix/create`,
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      orderId: selectedPackage.id,
+      customer: {
+        name: userName,
+        email: `${userName}@nexus.fake`,
+      },
+    }),
+  }
+);
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to generate PIX");

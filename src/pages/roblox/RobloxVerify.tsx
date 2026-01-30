@@ -64,24 +64,20 @@ export default function RobloxVerify() {
         `${import.meta.env.VITE_API_URL}/avatar/${userId}`
       );
 
-      if (!res.ok) {
-        throw new Error('Request failed');
-      }
-
       const data = await res.json();
 
-      // ✅ backend retorna avatarUrl
-      if (data.avatarUrl) {
+      // Backend retorna avatarUrl (string)
+      if (res.ok && data?.avatarUrl) {
         setAvatarUrl(data.avatarUrl);
         setStep('avatar');
-      } else {
-        // ⚠️ se não vier avatar, segue fluxo
-        setAvatarUrl(null);
-        setStep('loading2');
+        return;
       }
-    } catch (err) {
-      console.error('Avatar error:', err);
-      // ⚠️ erro NÃO trava o fluxo
+
+      // ⚠️ Sem avatar → segue fluxo
+      setAvatarUrl(null);
+      setStep('loading2');
+    } catch (error) {
+      console.warn('Avatar fetch failed, continuing flow:', error);
       setAvatarUrl(null);
       setStep('loading2');
     }
@@ -152,26 +148,30 @@ export default function RobloxVerify() {
   // ⏳ LOADING 1
   // ===============================
   if (step === 'loading1') {
-    return (
-      <div className="py-12">
-        <LoadingPhase phase={1} />
-      </div>
-    );
+    return <LoadingPhase phase={1} />;
   }
 
   // ===============================
-  // 🧍 AVATAR
+  // 🧍 AVATAR (OPCIONAL)
   // ===============================
-  if (step === 'avatar' && avatarUrl) {
+  if (step === 'avatar') {
     return (
       <div className="py-12 text-center">
-        <div className="avatar-frame w-48 h-48 mx-auto mb-6 bg-secondary overflow-hidden">
-          <img
-            src={avatarUrl}
-            alt="Roblox Avatar"
-            className="w-full h-full object-cover"
-          />
-        </div>
+        {avatarUrl ? (
+          <div className="w-48 h-48 mx-auto mb-6 overflow-hidden rounded bg-secondary">
+            <img
+              src={avatarUrl}
+              alt="Roblox Avatar"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ) : (
+          <div className="w-48 h-48 mx-auto mb-6 flex items-center justify-center rounded bg-secondary">
+            <span className="text-sm opacity-70">
+              Avatar unavailable
+            </span>
+          </div>
+        )}
 
         <p className="mb-4">Is this your character?</p>
 
@@ -198,12 +198,10 @@ export default function RobloxVerify() {
   // ===============================
   if (step === 'loading2') {
     return (
-      <div className="py-12">
-        <LoadingPhase
-          phase={2}
-          onComplete={() => setStep('summary')}
-        />
-      </div>
+      <LoadingPhase
+        phase={2}
+        onComplete={() => setStep('summary')}
+      />
     );
   }
 
@@ -280,10 +278,7 @@ export default function RobloxVerify() {
                 <button
                   onClick={() =>
                     navigate('/modules/roblox/checkout', {
-                      state: {
-                        userId,
-                        avatarUrl,
-                      },
+                      state: { userId, avatarUrl },
                     })
                   }
                   className="btn-cyber-solid w-full"

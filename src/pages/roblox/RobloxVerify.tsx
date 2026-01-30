@@ -36,7 +36,7 @@ const finalExecutionLogs = [
 export default function RobloxVerify() {
   const [step, setStep] = useState<VerifyStep>('input');
   const [userId, setUserId] = useState('');
-  const [avatarBase64, setAvatarBase64] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   const [checkItems, setCheckItems] = useState<CheckItem[]>([
     { id: 'integrity', label: 'Account Integrity', checked: true },
@@ -65,23 +65,25 @@ export default function RobloxVerify() {
       );
 
       if (!res.ok) {
-        throw new Error('Avatar request failed');
+        throw new Error('Request failed');
       }
 
       const data = await res.json();
 
-      if (!data.imageBase64) {
-        throw new Error('Invalid avatar response');
+      // ✅ backend retorna avatarUrl
+      if (data.avatarUrl) {
+        setAvatarUrl(data.avatarUrl);
+        setStep('avatar');
+      } else {
+        // ⚠️ se não vier avatar, segue fluxo
+        setAvatarUrl(null);
+        setStep('loading2');
       }
-
-      setAvatarBase64(data.imageBase64);
-      setStep('avatar');
     } catch (err) {
-      console.error('Avatar fetch failed:', err);
-      setUserId('');
-      setAvatarBase64(null);
-      setStep('input');
-      alert('Failed to load avatar. Check User ID.');
+      console.error('Avatar error:', err);
+      // ⚠️ erro NÃO trava o fluxo
+      setAvatarUrl(null);
+      setStep('loading2');
     }
   };
 
@@ -93,7 +95,7 @@ export default function RobloxVerify() {
       setStep('loading2');
     } else {
       setUserId('');
-      setAvatarBase64(null);
+      setAvatarUrl(null);
       setStep('input');
     }
   };
@@ -160,12 +162,12 @@ export default function RobloxVerify() {
   // ===============================
   // 🧍 AVATAR
   // ===============================
-  if (step === 'avatar' && avatarBase64) {
+  if (step === 'avatar' && avatarUrl) {
     return (
       <div className="py-12 text-center">
         <div className="avatar-frame w-48 h-48 mx-auto mb-6 bg-secondary overflow-hidden">
           <img
-            src={avatarBase64}
+            src={avatarUrl}
             alt="Roblox Avatar"
             className="w-full h-full object-cover"
           />
@@ -280,7 +282,7 @@ export default function RobloxVerify() {
                     navigate('/modules/roblox/checkout', {
                       state: {
                         userId,
-                        avatarBase64,
+                        avatarUrl,
                       },
                     })
                   }

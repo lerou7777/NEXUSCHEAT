@@ -15,7 +15,7 @@ export default function About() {
             network architecture, and internet-facing infrastructure.
           </p>
           <p>
-            We study how modern software communicates, where systems fail,
+            We study. how modern software communicates, where systems fail,
             and how vulnerabilities emerge across public networks.
           </p>
           <p>
